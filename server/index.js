@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 const app = require("./app.js");
 const User = require("./User.js")
 const express = require("express")
-const path = require("path")
+const path = require("path");
+const { removeAllListeners } = require("process");
 // (async ()=>{
 //     try {
 //         mongoose.connect("mongodb://localhost/testdb")
@@ -42,11 +43,22 @@ app.post('/api/user/create', async (req, res)=>{
 //     res.send(all)
 // })
 
-app.get('/api', (req, res)=>{
+const handleUsers = async() =>{
+    console.log("Handling Users")
+    const filter = {}
+    const all =  await User.find(filter)
+    console.log(all)
+    return all
+}
+
+app.get('/api', async (req, res)=>{
     console.log("api requested")
-    res.json({"users": ["user1", "user2", "user3"]})
+    const usersData = await handleUsers()
+    res.json({"users": usersData})
 }
 )
+
+
 
 //curl -X POST https://djk01281-opulent-fortnight-7jqrg976v4cr5qj-5000.preview.app.github.dev/user/create -H 'Content-Type: application/json' -d '{"id":1, "name":"djk"}'
 app.listen(5000, ()=> console.log("listening on port 5000"))

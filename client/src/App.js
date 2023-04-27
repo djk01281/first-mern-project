@@ -7,7 +7,6 @@ function App() {
   useEffect( ()=>{
     const fetchData = async () => {
       const data = await fetch('/api')
-      console.log(data)
       const jsonData = await data.json()
       setBackendData(jsonData)
     }
@@ -19,8 +18,9 @@ function App() {
         {(typeof backendData.users === 'undefined')?(
           <p>Loading</p>
         ):(
-          backendData.users.map((user, i)=>
-          (<p key = {i}>{user}</p>))
+          backendData.users.map((user) => {
+            return <p>{user.name}</p>
+          })
         )}
     </div>
   )
