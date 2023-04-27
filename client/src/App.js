@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import Memo from './Memo.js'
 
 function App() {
 
@@ -56,6 +56,12 @@ function App() {
     await fetchData()
   }
 
+  const fetchData = async () =>{
+    const data = await fetch('/api/all')
+    const jsonData = await data.json()
+    setBackendData(jsonData)
+  }
+
   return (
       <div>
         <form onSubmit={submitHandler}>
@@ -67,8 +73,9 @@ function App() {
           <p>Loading</p>
         ):(
           backendData.memos.map((memo) => {
-            return <div><p id={memo._id}>{memo.text}</p>
-            <button onClick={ async(e)=> await handleDelete(e, memo._id)}>X</button>
+            return <div>
+            <Memo id = {memo._id} memo = {memo.text} reload = {fetchData}/>
+            <button onClick={ async(e)=> await handleDelete(e, memo._id)}>DELETE</button>
             </div>
           })
         )}

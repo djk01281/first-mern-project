@@ -27,6 +27,11 @@ app.delete('/api/delete/:id', async(req, res)=>{
     await handleDelete(req, res, req.params.id)
 })
 
+app.post('/api/update/:id', async(req, res)=>{
+    console.log("update requested")
+    await handleUpdate(req, res, req.params.id)
+})
+
 const handleAll = async (req, res) => {
     const filter = {}
     const all = await Memo.find(filter)
@@ -50,6 +55,11 @@ const handleDelete = async(req, res, id) => {
     res.send(id)
 }
 
+const handleUpdate = async(req, res, id) => {
+    await Memo.findOneAndUpdate({"_id": id}, {"text": req.body["text"]})
+    console.log("memo updated")
+    res.send(id)
+}
 
 //curl -X POST https://djk01281-opulent-fortnight-7jqrg976v4cr5qj-5000.preview.app.github.dev/api/create -H 'Content-Type: application/json' -d '{"text":"This is another memo"}'
 app.listen(5000, ()=> console.log("listening on port 5000"))
