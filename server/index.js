@@ -4,23 +4,7 @@ const User = require("./User.js")
 const express = require("express")
 const path = require("path");
 const Memo = require("./Memo.js");
-const { resolve } = require("dns/promises");
-const { reset } = require("nodemon");
-// (async ()=>{
-//     try {
-//         mongoose.connect("mongodb://localhost/testdb")
-//         console.log("DB CONNECTED")
 
-//         const onListening = () => {
-//             console.log("Listening on PORT 5000")
-//         }
-//         app.listen(5000, onListening)
-
-//     } catch (error) {
-//         console.error("error: ", error)
-//         throw error
-//     }
-// })()
 
 mongoose.connect("mongodb://localhost/testdb")
 
@@ -37,10 +21,15 @@ app.post('/api/create', async (req, res) =>{
     await handlePost(req, res)
 })
 
+
+app.delete('/api/delete/:id', async(req, res)=>{
+    console.log("delete requested")
+    await handleDelete(req, res, req.params.id)
+})
+
 const handleAll = async (req, res) => {
     const filter = {}
     const all = await Memo.find(filter)
-    console.log(all)
     res.json({"memos": all})
 }
 
@@ -53,6 +42,12 @@ const handlePost = async(req, res) => {
     } catch (error) {
         console.log(error)
     }
+}
+
+const handleDelete = async(req, res, id) => {
+    await Memo.deleteOne( {"_id": id});
+    console.log("memo deleted")
+    res.send(id)
 }
 
 

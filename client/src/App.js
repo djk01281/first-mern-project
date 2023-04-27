@@ -43,6 +43,19 @@ function App() {
     setMemo(e.target.value)
   }
 
+  const handleDelete = async (e, id) =>{
+    e.preventDefault()
+    await fetch(`/api/delete/${id}`, {
+      method: "DELETE"
+    })
+    const fetchData = async () =>{
+      const data = await fetch('/api/all')
+      const jsonData = await data.json()
+      setBackendData(jsonData)
+    }
+    await fetchData()
+  }
+
   return (
       <div>
         <form onSubmit={submitHandler}>
@@ -54,7 +67,9 @@ function App() {
           <p>Loading</p>
         ):(
           backendData.memos.map((memo) => {
-            return <p>{memo.text}</p>
+            return <div><p id={memo._id}>{memo.text}</p>
+            <button onClick={ async(e)=> await handleDelete(e, memo._id)}>X</button>
+            </div>
           })
         )}
         </div>
