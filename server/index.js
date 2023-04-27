@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const app = require("./app.js");
 const User = require("./User.js")
 const express = require("express")
+const path = require("path")
 // (async ()=>{
 //     try {
 //         mongoose.connect("mongodb://localhost/testdb")
@@ -19,9 +20,9 @@ const express = require("express")
 // })()
 
 mongoose.connect("mongodb://localhost/testdb")
-app.use(express.json())
 
-app.post('/user/create', async (req, res)=>{
+app.use(express.json())
+app.post('/api/user/create', async (req, res)=>{
     console.log(req.body)
     try {
         const reqid = req.body['id']
@@ -34,6 +35,20 @@ app.post('/user/create', async (req, res)=>{
     
     res.send('User Created')
 })
+// app.get('/api', async(req, res)=>{
+//     const filter = {}
+//     const all = await User.find(filter);
+//     console.log(all)
+//     res.send(all)
+// })
+
+app.get('/api', (req, res)=>{
+    console.log("api requested")
+    res.json({"users": ["user1", "user2", "user3"]})
+}
+)
+
 //curl -X POST https://djk01281-opulent-fortnight-7jqrg976v4cr5qj-5000.preview.app.github.dev/user/create -H 'Content-Type: application/json' -d '{"id":1, "name":"djk"}'
 app.listen(5000, ()=> console.log("listening on port 5000"))
+
 
